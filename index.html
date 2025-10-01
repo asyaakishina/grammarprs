@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Quest: Present Simple</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --correct: #2ec4b6;
+            --incorrect: #e71d36;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.3);
+            margin-top: 15px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--success);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .quiz-container {
+            padding: 30px;
+        }
+        
+        .question-container {
+            margin-bottom: 25px;
+        }
+        
+        .question-number {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .option {
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            background-color: #f8f9fa;
+            border-color: var(--primary);
+        }
+        
+        .option.selected {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .option.correct {
+            border-color: var(--correct);
+            background-color: rgba(46, 196, 182, 0.1);
+        }
+        
+        .option.incorrect {
+            border-color: var(--incorrect);
+            background-color: rgba(231, 29, 54, 0.1);
+        }
+        
+        .option-letter {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            background-color: #e9ecef;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .option.selected .option-letter {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .option.correct .option-letter {
+            background-color: var(--correct);
+            color: white;
+        }
+        
+        .option.incorrect .option-letter {
+            background-color: var(--incorrect);
+            color: white;
+        }
+        
+        .feedback-container {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: none;
+        }
+        
+        .feedback-correct {
+            background-color: rgba(46, 196, 182, 0.1);
+            border-left: 5px solid var(--correct);
+        }
+        
+        .feedback-incorrect {
+            background-color: rgba(231, 29, 54, 0.1);
+            border-left: 5px solid var(--incorrect);
+        }
+        
+        .feedback-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .feedback-title i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .feedback-text {
+            line-height: 1.5;
+        }
+        
+        .lifehack {
+            background-color: rgba(248, 150, 30, 0.1);
+            border-left: 5px solid var(--warning);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary {
+            background-color: #e9ecef;
+            color: var(--dark);
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background-color: #dee2e6;
+        }
+        
+        .btn-success {
+            background-color: var(--correct);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--incorrect);
+            color: white;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .results-container {
+            padding: 30px;
+            display: none;
+        }
+        
+        .results-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            background: conic-gradient(var(--correct) 0% var(--p), #e9ecef var(--p) 100%);
+            position: relative;
+        }
+        
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 50%;
+        }
+        
+        .score-text {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .results-message {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .mistakes-list {
+            margin: 25px 0;
+        }
+        
+        .mistake-item {
+            padding: 15px;
+            border-left: 5px solid var(--incorrect);
+            background-color: rgba(231, 29, 54, 0.05);
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .mistake-question {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .mistake-answer {
+            color: var(--incorrect);
+        }
+        
+        .mistake-correct {
+            color: var(--correct);
+        }
+        
+        .reactions {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .hint-btn {
+            background: none;
+            border: 2px solid var(--warning);
+            color: var(--warning);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .hint-btn:hover:not(:disabled) {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .hint-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .hint-container {
+            background-color: rgba(248, 150, 30, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+        
+        .bounce {
+            animation: bounce 1s;
+        }
+        
+        @media (max-width: 600px) {
+            .quiz-container, .results-container {
+                padding: 20px;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+            
+            .buttons-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Grammar Quest</h1>
+            <div class="subtitle">Present Simple Challenge</div>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+        </header>
+        
+        <div class="quiz-container" id="quiz-container">
+            <div class="controls">
+                <button class="hint-btn" id="hint-btn">
+                    <i class="fas fa-lightbulb"></i> Подсказка
+                </button>
+            </div>
+            
+            <div class="hint-container" id="hint-container">
+                <h3><i class="fas fa-info-circle"></i> Правило:</h3>
+                <p id="hint-text"></p>
+            </div>
+            
+            <div class="question-container">
+                <div class="question-number" id="question-number">Вопрос 1 из 12</div>
+                <div class="question-text" id="question-text"></div>
+                
+                <div class="options-container" id="options-container">
+                    <!-- Options will be inserted here by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="feedback-container" id="feedback-container">
+                <div class="feedback-title">
+                    <i class="fas fa-check-circle" id="feedback-icon"></i>
+                    <span id="feedback-title">Правильно!</span>
+                </div>
+                <div class="feedback-text" id="feedback-text"></div>
+                <div class="lifehack" id="lifehack"></div>
+            </div>
+            
+            <div class="buttons-container">
+                <button class="btn btn-secondary" id="check-btn" disabled>
+                    <i class="fas fa-check"></i> Проверить
+                </button>
+                <button class="btn btn-primary" id="next-btn" disabled>
+                    Далее <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="reactions" id="reactions"></div>
+        </div>
+        
+        <div class="results-container" id="results-container">
+            <div class="results-header">
+                <div class="score-circle" id="score-circle">
+                    <div class="score-text" id="score-text">0/12</div>
+                </div>
+                <div class="results-message" id="results-message"></div>
+                <p id="results-description"></p>
+            </div>
+            
+            <div class="mistakes-list" id="mistakes-list">
+                <!-- Mistakes will be inserted here by JavaScript -->
+            </div>
+            
+            <div class="buttons-container">
+                <button class="btn btn-danger" id="restart-btn">
+                    <i class="fas fa-redo"></i> Начать заново
+                </button>
+                <button class="btn btn-primary" id="review-btn">
+                    <i class="fas fa-book"></i> Повторить ошибки
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Questions data
+        const questions = [
+            {
+                question: "It’s my mother’s birthday next week.",
+                options: ["Who", "Whose", "Whom"],
+                correct: 1,
+                explanation: "Правильно! 'Whose' используется для обозначения принадлежности.",
+                lifehack: "Запомни: 'Whose' переводится как 'чей/чья/чьё' и показывает принадлежность."
+            },
+            {
+                question: "My best friend Jeff lives in Walton Street.",
+                options: ["Whom", "Whose", "Who"],
+                correct: 2,
+                explanation: "Правильно! 'Who' используется как подлежащее в вопросе.",
+                lifehack: "Запомни: 'Who' используется, когда спрашиваем о человеке, выполняющем действие."
+            },
+            {
+                question: "Mrs. Laura is in her office.",
+                options: ["When", "Where", "How"],
+                correct: 1,
+                explanation: "Правильно! 'Where' используется для вопросов о месте.",
+                lifehack: "Запомни: 'Where' переводится как 'где' или 'куда'."
+            },
+            {
+                question: "I’ve got two bottles of lemonade at home.",
+                options: ["How many", "How much", "What"],
+                correct: 0,
+                explanation: "Правильно! 'How many' используется для исчисляемых существительных.",
+                lifehack: "Запомни: 'How many' — для исчисляемых, 'How much' — для неисчисляемых существительных."
+            },
+            {
+                question: "Mr. Williams usually walks his dog early in the morning.",
+                options: ["Where", "When", "How often"],
+                correct: 2,
+                explanation: "Правильно! 'How often' используется для вопросов о частоте действий.",
+                lifehack: "Запомни: 'How often' переводится как 'как часто'."
+            },
+            {
+                question: "... doesn’t you Dad use a dictionary when he translate from Russian into English? - He knows English well.",
+                options: ["How", "What", "Why"],
+                correct: 2,
+                explanation: "Правильно! 'Why' используется для вопросов о причине.",
+                lifehack: "Запомни: 'Why' переводится как 'почему' и задаёт вопрос о причине."
+            },
+            {
+                question: "You’ve got a fine collection of coins. ... coin do you like beer?",
+                options: ["What", "Which", "Whose"],
+                correct: 1,
+                explanation: "Правильно! 'Which' используется при выборе из ограниченного набора.",
+                lifehack: "Запомни: 'Which' используется, когда есть ограниченный выбор вариантов."
+            },
+            {
+                question: "I see a pretty little girl in the yard.",
+                options: ["Who", "What", "Which"],
+                correct: 0,
+                explanation: "Правильно! 'Who' используется, когда спрашиваем о человеке.",
+                lifehack: "Запомни: 'Who' всегда относится к людям."
+            },
+            {
+                question: "- ... does Eddy do for living? - He’s a travel agent.",
+                options: ["How", "Where", "What"],
+                correct: 2,
+                explanation: "Правильно! 'What' используется для вопросов о роде деятельности.",
+                lifehack: "Запомни: 'What do you do?' — стандартный вопрос о профессии."
+            },
+            {
+                question: "... is the weather like today?",
+                options: ["What", "How", "Which"],
+                correct: 0,
+                explanation: "Правильно! 'What ... like?' — стандартная конструкция для описания.",
+                lifehack: "Запомни: 'What is ... like?' используется, чтобы спросить о характеристиках."
+            },
+            {
+                question: "... money do you want?",
+                options: ["How many", "How much", "Which"],
+                correct: 1,
+                explanation: "Правильно! 'How much' используется для неисчисляемых существительных.",
+                lifehack: "Запомни: 'Money' — неисчисляемое существительное, поэтому используем 'How much'."
+            },
+            {
+                question: "... is the cheapest way to get to London: by plane or by train?",
+                options: ["What", "How", "Which"],
+                correct: 2,
+                explanation: "Правильно! 'Which' используется при выборе из ограниченного набора.",
+                lifehack: "Запомни: Когда есть конкретные варианты (plane/train), используем 'Which'."
+            }
+        ];
+
+        // Game state
+        let currentQuestion = 0;
+        let score = 0;
+        let mistakes = [];
+        let selectedOption = null;
+        let hintUsed = false;
+        let questionsOrder = [];
+
+        // DOM elements
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const questionNumber = document.getElementById('question-number');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackContainer = document.getElementById('feedback-container');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackText = document.getElementById('feedback-text');
+        const lifehack = document.getElementById('lifehack');
+        const checkBtn = document.getElementById('check-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progress = document.getElementById('progress');
+        const scoreCircle = document.getElementById('score-circle');
+        const scoreText = document.getElementById('score-text');
+        const resultsMessage = document.getElementById('results-message');
+        const resultsDescription = document.getElementById('results-description');
+        const mistakesList = document.getElementById('mistakes-list');
+        const restartBtn = document.getElementById('restart-btn');
+        const reviewBtn = document.getElementById('review-btn');
+        const reactions = document.getElementById('reactions');
+        const hintBtn = document.getElementById('hint-btn');
+        const hintContainer = document.getElementById('hint-container');
+        const hintText = document.getElementById('hint-text');
+
+        // Initialize the game
+        function initGame() {
+            // Create a randomized order of questions
+            questionsOrder = [...Array(questions.length).keys()];
+            shuffleArray(questionsOrder);
+            
+            currentQuestion = 0;
+            score = 0;
+            mistakes = [];
+            hintUsed = false;
+            
+            updateProgress();
+            showQuestion();
+            
+            // Reset buttons
+            hintBtn.disabled = false;
+            updateHintButton();
+        }
+
+        // Shuffle array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Show current question
+        function showQuestion() {
+            const questionIndex = questionsOrder[currentQuestion];
+            const question = questions[questionIndex];
+            
+            // Update question number and text
+            questionNumber.textContent = `Вопрос ${currentQuestion + 1} из ${questions.length}`;
+            questionText.textContent = question.question;
+            
+            // Clear options container
+            optionsContainer.innerHTML = '';
+            
+            // Create option elements
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.innerHTML = `
+                    <span class="option-letter">${String.fromCharCode(65 + index)}</span>
+                    <span class="option-text">${option}</span>
+                `;
+                
+                optionElement.addEventListener('click', () => selectOption(optionElement, index));
+                
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Reset feedback and buttons
+            feedbackContainer.style.display = 'none';
+            checkBtn.disabled = true;
+            nextBtn.disabled = true;
+            selectedOption = null;
+            
+            // Hide hint container
+            hintContainer.style.display = 'none';
+            
+            // Update hint button text
+            updateHintButton();
+        }
+
+        // Update hint button text
+        function updateHintButton() {
+            if (hintUsed) {
+                hintBtn.innerHTML = '<i class="fas fa-lightbulb"></i> Подсказка использована';
+                hintBtn.disabled = true;
+            } else {
+                hintBtn.innerHTML = '<i class="fas fa-lightbulb"></i> Подсказка';
+                hintBtn.disabled = false;
+            }
+        }
+
+        // Select an option
+        function selectOption(optionElement, optionIndex) {
+            // Remove selected class from all options
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            optionElement.classList.add('selected');
+            selectedOption = optionIndex;
+            
+            // Enable check button
+            checkBtn.disabled = false;
+        }
+
+        // Check the answer
+        function checkAnswer() {
+            const questionIndex = questionsOrder[currentQuestion];
+            const question = questions[questionIndex];
+            const isCorrect = selectedOption === question.correct;
+            
+            // Show feedback
+            feedbackContainer.style.display = 'block';
+            
+            if (isCorrect) {
+                // Correct answer
+                feedbackContainer.className = 'feedback-container feedback-correct';
+                feedbackIcon.className = 'fas fa-check-circle';
+                feedbackTitle.textContent = 'Правильно!';
+                feedbackText.textContent = question.explanation;
+                lifehack.textContent = question.lifehack;
+                
+                score++;
+                
+                // Show reaction
+                showReaction('correct');
+            } else {
+                // Incorrect answer
+                feedbackContainer.className = 'feedback-container feedback-incorrect';
+                feedbackIcon.className = 'fas fa-times-circle';
+                feedbackTitle.textContent = 'Неправильно!';
+                feedbackText.textContent = question.explanation;
+                lifehack.textContent = question.lifehack;
+                
+                // Add to mistakes
+                mistakes.push({
+                    questionIndex: questionIndex,
+                    question: question.question,
+                    userAnswer: question.options[selectedOption],
+                    correctAnswer: question.options[question.correct]
+                });
+                
+                // Show reaction
+                showReaction('incorrect');
+            }
+            
+            // Highlight correct and incorrect options
+            document.querySelectorAll('.option').forEach((option, index) => {
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedOption && index !== question.correct) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // Update buttons
+            checkBtn.disabled = true;
+            nextBtn.disabled = false;
+            
+            // Update progress
+            updateProgress();
+        }
+
+        // Show reaction emoji
+        function showReaction(type) {
+            let emoji = '';
+            
+            if (type === 'correct') {
+                const correctEmojis = ['🎉', '👍', '👏', '✅', '💪', '🔥'];
+                emoji = correctEmojis[Math.floor(Math.random() * correctEmojis.length)];
+            } else {
+                const incorrectEmojis = ['😱', '🤔', '😬', '💡', '📚'];
+                emoji = incorrectEmojis[Math.floor(Math.random() * incorrectEmojis.length)];
+            }
+            
+            reactions.textContent = emoji;
+            reactions.style.opacity = '1';
+            reactions.classList.add('bounce');
+            
+            setTimeout(() => {
+                reactions.style.opacity = '0';
+                reactions.classList.remove('bounce');
+            }, 2000);
+        }
+
+        // Go to next question
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const progressPercent = (currentQuestion / questions.length) * 100;
+            progress.style.width = `${progressPercent}%`;
+        }
+
+        // Show results
+        function showResults() {
+            quizContainer.style.display = 'none';
+            resultsContainer.style.display = 'block';
+            
+            // Calculate score percentage
+            const scorePercent = Math.round((score / questions.length) * 100);
+            
+            // Update score circle
+            scoreCircle.style.setProperty('--p', `${scorePercent}%`);
+            scoreText.textContent = `${score}/${questions.length}`;
+            
+            // Set results message based on score
+            if (scorePercent >= 90) {
+                resultsMessage.textContent = 'Отлично! Ты настоящий эксперт!';
+                resultsDescription.textContent = 'Ты прекрасно разбираешься в Present Simple. Продолжай в том же духе!';
+            } else if (scorePercent >= 70) {
+                resultsMessage.textContent = 'Хорошо! Ты хорошо знаешь тему!';
+                resultsDescription.textContent = 'Ты хорошо справился с тестом, но есть над чем поработать.';
+            } else if (scorePercent >= 50) {
+                resultsMessage.textContent = 'Неплохо! Есть куда расти!';
+                resultsDescription.textContent = 'Ты понимаешь основы, но нужно ещё немного практики.';
+            } else {
+                resultsMessage.textContent = 'Попробуй ещё раз!';
+                resultsDescription.textContent = 'Не расстраивайся! Повтори правила и попробуй снова.';
+            }
+            
+            // Show mistakes if any
+            if (mistakes.length > 0) {
+                mistakesList.innerHTML = '<h3>Ошибки:</h3>';
+                
+                mistakes.forEach((mistake, index) => {
+                    const mistakeItem = document.createElement('div');
+                    mistakeItem.className = 'mistake-item';
+                    mistakeItem.innerHTML = `
+                        <div class="mistake-question">${index + 1}. ${mistake.question}</div>
+                        <div class="mistake-answer">Твой ответ: ${mistake.userAnswer}</div>
+                        <div class="mistake-correct">Правильный ответ: ${mistake.correctAnswer}</div>
+                    `;
+                    
+                    mistakesList.appendChild(mistakeItem);
+                });
+            } else {
+                mistakesList.innerHTML = '<p>Поздравляем! У тебя нет ошибок! 🎉</p>';
+            }
+        }
+
+        // Show hint
+        function showHint() {
+            const questionIndex = questionsOrder[currentQuestion];
+            const question = questions[questionIndex];
+            
+            hintText.textContent = question.lifehack;
+            hintContainer.style.display = 'block';
+            hintUsed = true;
+            updateHintButton();
+        }
+
+        // Event listeners
+        checkBtn.addEventListener('click', checkAnswer);
+        nextBtn.addEventListener('click', nextQuestion);
+        restartBtn.addEventListener('click', () => {
+            resultsContainer.style.display = 'none';
+            quizContainer.style.display = 'block';
+            initGame();
+        });
+        reviewBtn.addEventListener('click', () => {
+            // For simplicity, we'll just restart the game with the same questions
+            // In a more advanced version, we could show only the mistaken questions
+            resultsContainer.style.display = 'none';
+            quizContainer.style.display = 'block';
+            initGame();
+        });
+        hintBtn.addEventListener('click', showHint);
+
+        // Initialize the game when the page loads
+        window.addEventListener('load', initGame);
+    </script>
+</body>
+</html>
